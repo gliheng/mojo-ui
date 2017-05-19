@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'animation';
 
 .ui-tabs {
     font-family: 'Helvetica Neue', Roboto, "microsoft yahei", sans-serif;
@@ -8,11 +9,13 @@
     ul {
         margin: 0;
         padding: 0;
+        height: 3em;
+        line-height: 3em;
+
         li {
             display: inline-block;
+            height: 100%;
             text-align: center;
-            height: 2em;
-            line-height: 2em;
             list-style: none;
             background-color: $color1;
             color: $color1-light;
@@ -30,6 +33,22 @@
         position: relative;
         top: -2px;
         left: 0;
-        transition: left 1s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+        transition: left 1s $ease 0ms;
     }
+}
+
+.ui-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ui-ripple-fx {
+    position: absolute;
+    pointer-events: none;
+    background-color: white;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    border-radius: 50%;
+    animation: 3s spread $ease;
 }

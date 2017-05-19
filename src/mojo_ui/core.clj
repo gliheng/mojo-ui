@@ -13,11 +13,11 @@
       (join "\n" (line-seq rdr)))))
 
 (def config {:style {:root "css/"
-                     :ext [".scss" ".sass" ".css"]}})
+                     :exts [".scss" ".sass" ".css"]}})
 (defn resolve-file
   [fn type]
   (let [conf (config type)
-        exts (conf :ext)
+        exts (conf :exts)
         root (conf :root)
         file (first (map #(resource (str root fn %)) exts))]
     (if file (.getFile file))))

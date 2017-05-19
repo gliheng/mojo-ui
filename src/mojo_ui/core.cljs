@@ -1,5 +1,5 @@
 (ns mojo-ui.core
-  (:require [reagent.core :refer [render]]
+  (:require [reagent.core :refer [render atom]]
             [re-frame.core :refer [dispatch
                                    subscribe
                                    reg-event-db
@@ -28,6 +28,24 @@
   (if-let [opts (or (meta comp) (second comp))]
     (:key opts)))
 
+(defn ripple
+  ""
+  [& children]
+  (let [state (atom {:visible false})
+        hide-ripple (fn []
+                      (reset! state {:visible false}))
+        show-ripple (fn [evt]
+                      (let [target (.-currentTarget evt)
+                            rect (.getBoundingClientRect target)
+                            x (- (.-clientX evt) (.-left rect))
+                            y (- (.-clientY evt) (.-top rect))]
+                        (reset! state {:visible true
+                                       :pos {:left x :top y}}))
+                      (js/setTimeout hide-ripple 1000))]
+    (fn [] (-> [:div.ui-ripple {:on-click show-ripple}]
+               (into (if (:visible @state) [[:div.ui-ripple-fx {:style (:pos @state)}]] []))
+               (into children)))))
+
 (defn tabs
   "If tab-index is string, convert it to number first using tab keys."
   [{:keys [key]} & children]
@@ -48,10 +66,12 @@
       (for [i (range c)]
         [:li {:key i
               :class (if (= cur i) "ui-active" "")
-              :style {:width (str w "%")}
+              :style {:width (str (if (= i (dec c))
+                                    (- 100 (* w (dec c)))
+                                    w) "%")}
               :on-click
               #(dispatch [:change-tab-index key i])}
-         (nth title-list i)])]
+         [ripple (nth title-list i)]])]
      [:div.ui-line {:style {:left (str (* cur w) "%")
                          :width (str w "%")}}]
      [:div ^{:key cur} (nth children cur)]]))
