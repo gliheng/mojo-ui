@@ -10,7 +10,7 @@
 (devtools/install!)
 (enable-console-print!)
 
-(require-css "style.css")
+(require-css "style")
 
 (reg-event-db
  :change-tab-index
@@ -76,11 +76,7 @@
   [:div.demo
    [:div
     [:h1 "Tab Demo"]
-    [tab-demo {:key "first"}]]
-
-   [:div
-    [:h1 "Tab Demo"]
-    [tab-demo {:key "second"}]]])
+    [tab-demo {:key "tab-demo"}]]])
 
 (defn ^:export run-demo
   []

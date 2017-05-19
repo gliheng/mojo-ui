@@ -1,0 +1,35 @@
+@import 'variables';
+
+.ui-tabs {
+    font-family: 'Helvetica Neue', Roboto, "microsoft yahei", sans-serif;
+}
+
+.ui-tabs {
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            display: inline-block;
+            text-align: center;
+            height: 2em;
+            line-height: 2em;
+            list-style: none;
+            background-color: $color1;
+            color: $color1-light;
+            cursor: default;
+        }
+
+        li.ui-active {
+            color: white;
+        }
+    }
+
+    div.ui-line {
+        height: 2px;
+        background-color: $color2;
+        position: relative;
+        top: -2px;
+        left: 0;
+        transition: left 1s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    }
+}
