@@ -61,7 +61,7 @@
               cur)
         c (count children)
         w (js/Math.floor (/ 100 c))]
-    [:div.ui-tabs
+    [:div.ui-tabs.ui-widget
      [:ul
       (for [i (range c)]
         [:li {:key i
@@ -81,6 +81,15 @@
   [& children]
   (into [:div] children))
 
+(defn button
+  [& props]
+  [:div.ui-button.ui-widget (into [ripple] props)])
+
+(defn button-demo
+  ""
+  []
+  [button "Button with ripple effect."])
+
 (defn tab-demo
   [{:keys [key]}]
   [tabs {:key key}
@@ -96,7 +105,10 @@
   [:div.demo
    [:div
     [:h1 "Tab Demo"]
-    [tab-demo {:key "tab-demo"}]]])
+    [tab-demo {:key "tab-demo"}]]
+   [:div
+    [:h1 "Button Demo"]
+    [button-demo]]])
 
 (defn ^:export run-demo
   []

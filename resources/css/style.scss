@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'animation';
 
-.ui-tabs {
+.ui-widget {
     font-family: 'Helvetica Neue', Roboto, "microsoft yahei", sans-serif;
 }
 
@@ -9,8 +9,8 @@
     ul {
         margin: 0;
         padding: 0;
-        height: 3em;
-        line-height: 3em;
+        height: 2.5em;
+        line-height: 2.5em;
 
         li {
             display: inline-block;
@@ -51,4 +51,14 @@
     opacity: 0;
     border-radius: 50%;
     animation: 3s spread $ease;
+}
+
+.ui-button {
+    .ui-ripple {
+        padding: 0.5em;
+    }
+    cursor: default;
+    display: inline-block;
+    color: white;
+    background-color: $color1;
 }
