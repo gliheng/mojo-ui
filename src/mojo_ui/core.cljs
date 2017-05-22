@@ -1,9 +1,9 @@
 (ns mojo-ui.core
-  (:require [reagent.core :refer [render atom]]
-            [re-frame.core :refer [dispatch
+  (:require [re-frame.core :refer [dispatch
                                    subscribe
                                    reg-event-db
                                    reg-sub]]
+            [mojo-ui.fx :refer [ripple]]
             [devtools.core :as devtools])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
@@ -28,26 +28,6 @@
   (if-let [opts (or (meta comp) (second comp))]
     (:key opts)))
 
-(defn ripple
-  ""
-  [& children]
-  (let [ripples (atom (list))
-        remove-ripple (fn []
-                        (swap! ripples rest))
-        add-ripple (fn [evt]
-                     (let [target (.-currentTarget evt)
-                           rect (.getBoundingClientRect target)
-                           x (- (.-clientX evt) (.-left rect))
-                           y (- (.-clientY evt) (.-top rect))]
-                       (swap! ripples concat (list {:timestamp (. (new js/Date) getTime)
-                                                    :pos {:left x :top y}})))
-                     (js/setTimeout remove-ripple 1000))]
-    (fn []
-      [:div.ui-ripple {:on-click add-ripple}
-       (map #(vector :div.ui-ripple-fx {:key (:timestamp %)
-                                        :style (:pos %)}) @ripples)
-       children])))
-
 (defn tabs
   "If tab-index is string, convert it to number first using tab keys."
   [{:keys [key]} & children]
@@ -62,20 +42,20 @@
               (key-map cur)
               cur)
         c (count children)
-        w (js/Math.floor (/ 100 c))]
+        w (js/Math.floor (/ 100 c))
+        get-w #(if (= % (dec c))
+                 (- 100 (* w (dec c)))
+                 w)]
     [:div.ui-tabs.ui-widget
      [:ul
       (for [i (range c)]
         [:li {:key i
               :class (if (= cur i) "ui-active" "")
-              :style {:width (str (if (= i (dec c))
-                                    (- 100 (* w (dec c)))
-                                    w) "%")}
-              :on-click
-              #(dispatch [:change-tab-index key i])}
+              :style {:width (str (get-w i) "%")}
+              :on-click #(dispatch [:change-tab-index key i])}
          [ripple (nth title-list i)]])]
      [:div.ui-line {:style {:left (str (* cur w) "%")
-                         :width (str w "%")}}]
+                         :width (str (get-w cur) "%")}}]
      [:div ^{:key cur} (nth children cur)]]))
 
 (defn tab
@@ -86,36 +66,3 @@
 (defn button
   [& rest]
   [:div.ui-button.ui-widget (into [ripple] rest)])
-
-(defn button-demo
-  ""
-  []
-  [button "Button with ripple effect."])
-
-(defn tab-demo
-  [{:keys [key]}]
-  [tabs {:key key}
-   [tab {:title "Tab 1"}
-    [:div "tab1 content"]]
-   [tab {:title "Tab 2"}
-    [:div "tab2 content"]]
-   [tab {:title "Tab 3"}
-    [:div "tab3 content"]]])
-
-(defn demo
-  []
-  [:div.demo
-   [:div
-    [:h1 "Tab Demo"]
-    [tab-demo {:key "tab-demo"}]]
-   [:div
-    [:h1 "Button Demo"]
-    [button-demo]]])
-
-(defn ^:export run-demo
-  []
-  (render [demo]
-          (js/document.getElementById "app")))
-
-(defn on-js-reload []
-  (run-demo))
