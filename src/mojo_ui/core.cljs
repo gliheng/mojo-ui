@@ -31,20 +31,22 @@
 (defn ripple
   ""
   [& children]
-  (let [state (atom {:visible false})
-        hide-ripple (fn []
-                      (reset! state {:visible false}))
-        show-ripple (fn [evt]
-                      (let [target (.-currentTarget evt)
-                            rect (.getBoundingClientRect target)
-                            x (- (.-clientX evt) (.-left rect))
-                            y (- (.-clientY evt) (.-top rect))]
-                        (reset! state {:visible true
-                                       :pos {:left x :top y}}))
-                      (js/setTimeout hide-ripple 1000))]
-    (fn [] (-> [:div.ui-ripple {:on-click show-ripple}]
-               (into (if (:visible @state) [[:div.ui-ripple-fx {:style (:pos @state)}]] []))
-               (into children)))))
+  (let [ripples (atom (list))
+        remove-ripple (fn []
+                        (swap! ripples rest))
+        add-ripple (fn [evt]
+                     (let [target (.-currentTarget evt)
+                           rect (.getBoundingClientRect target)
+                           x (- (.-clientX evt) (.-left rect))
+                           y (- (.-clientY evt) (.-top rect))]
+                       (swap! ripples concat (list {:timestamp (. (new js/Date) getTime)
+                                                    :pos {:left x :top y}})))
+                     (js/setTimeout remove-ripple 1000))]
+    (fn []
+      [:div.ui-ripple {:on-click add-ripple}
+       (map #(vector :div.ui-ripple-fx {:key (:timestamp %)
+                                        :style (:pos %)}) @ripples)
+       children])))
 
 (defn tabs
   "If tab-index is string, convert it to number first using tab keys."
@@ -78,12 +80,12 @@
 
 (defn tab
   ""
-  [& children]
-  (into [:div] children))
+  [& rest]
+  (into [:div] rest))
 
 (defn button
-  [& props]
-  [:div.ui-button.ui-widget (into [ripple] props)])
+  [& rest]
+  [:div.ui-button.ui-widget (into [ripple] rest)])
 
 (defn button-demo
   ""
