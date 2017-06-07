@@ -109,3 +109,10 @@
 .ui-button:focus {
     outline: none;
 }
+
+.ui-accordion {
+    .ui-title {
+        padding-left: 10px;
+        border-left: 10px solid $color1;
+    }
+}

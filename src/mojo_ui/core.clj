@@ -14,7 +14,6 @@
 (def config {:style {:root "css/"
                      :exts [".scss" ".sass" ".css"]}})
 
-
 (defn resolve-file
   [fn type]
   (let [conf (config type)

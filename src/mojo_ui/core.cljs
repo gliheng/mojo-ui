@@ -55,7 +55,7 @@
               :class (if (= cur i) "ui-active" "")
               :style {:width (str (get-w i) "%")}
               :on-click #(dispatch [:change-tab-index key i])}
-         (list (nth title-list i) [ripple])])]
+         (nth title-list i) [ripple]])]
      [:div.ui-line {:style {:left (str (* cur w) "%")
                          :width (str (get-w cur) "%")}}]
      [:div ^{:key cur} (nth children cur)]]))
@@ -63,7 +63,7 @@
 (defn item
   ""
   [& rest]
-  (into [:div] rest))
+  (into [:div] (drop 1 rest)))
 
 (defmulti button map?)
 
@@ -72,18 +72,20 @@
         on-focus (fn [] (reset! focus true))
         on-blur (fn [] (reset! focus false))]
     (fn [{take-focus :take-focus} & rest]
-      (let [children (list [:div.ui-bg] rest)
-            children (if (and take-focus @focus)
-                       (conj children [bulge])
-                       children)
-            children (conj children [ripple])]
-        [:div.ui-button.ui-widget {:tab-index 0
-                                   :on-focus on-focus
-                                   :on-blur on-blur} children]))))
+      [:div.ui-button.ui-widget {:tab-index 0
+                                 :on-focus on-focus
+                                 :on-blur on-blur}
+       [:div.ui-bg]
+       [ripple]
+       (if (and take-focus @focus) [bulge] nil)
+       rest])))
 
 (defmethod button false
   [& rest]
-  [:div.ui-button.ui-widget (list [ripple] [:div.ui-bg] rest)])
+  [:div.ui-button.ui-widget
+   [:div.ui-bg]
+   [ripple]
+   rest])
 
 (reg-event-db
  :change-accordion-index
