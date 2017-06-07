@@ -20,3 +20,9 @@
        (map #(vector :div.ui-ripple-fx {:key (:timestamp %)
                                         :style (:pos %)}) @ripples)
        children])))
+
+
+(defn bulge
+  ""
+  []
+  [:div.ui-bulge])

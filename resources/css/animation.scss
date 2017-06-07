@@ -8,3 +8,25 @@
         transform: scale(150);
     }
 }
+
+@keyframes bulge-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    to {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+}
+
+@keyframes bulge {
+    from {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    to {
+        transform: scale(0.9);
+        opacity: 0.3;
+    }
+}

@@ -3,7 +3,8 @@
                                    subscribe
                                    reg-event-db
                                    reg-sub]]
-            [mojo-ui.fx :refer [ripple]]
+            [reagent.core :refer [atom]]
+            [mojo-ui.fx :refer [ripple bulge]]
             [devtools.core :as devtools])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
@@ -28,11 +29,12 @@
   (if-let [opts (or (meta comp) (second comp))]
     (:key opts)))
 
+(def get-title (comp :title second))
+
 (defn tabs
   "If tab-index is string, convert it to number first using tab keys."
-  [{:keys [key]} & children]
+  [{:key [key]} & children]
   (let [cur @(subscribe [:tab-index key])
-        get-title (comp :title second)
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
                                  [key %2])
@@ -53,16 +55,62 @@
               :class (if (= cur i) "ui-active" "")
               :style {:width (str (get-w i) "%")}
               :on-click #(dispatch [:change-tab-index key i])}
-         [ripple (nth title-list i)]])]
+         (list (nth title-list i) [ripple])])]
      [:div.ui-line {:style {:left (str (* cur w) "%")
                          :width (str (get-w cur) "%")}}]
      [:div ^{:key cur} (nth children cur)]]))
 
-(defn tab
+(defn item
   ""
   [& rest]
   (into [:div] rest))
 
-(defn button
+(defmulti button map?)
+
+(defmethod button true []
+  (let [focus (atom false)
+        on-focus (fn [] (reset! focus true))
+        on-blur (fn [] (reset! focus false))]
+    (fn [{take-focus :take-focus} & rest]
+      (let [children (list [:div.ui-bg] rest)
+            children (if (and take-focus @focus)
+                       (conj children [bulge])
+                       children)
+            children (conj children [ripple])]
+        [:div.ui-button.ui-widget {:tab-index 0
+                                   :on-focus on-focus
+                                   :on-blur on-blur} children]))))
+
+(defmethod button false
   [& rest]
-  [:div.ui-button.ui-widget (into [ripple] rest)])
+  [:div.ui-button.ui-widget (list [ripple] [:div.ui-bg] rest)])
+
+(reg-event-db
+ :change-accordion-index
+ (fn [db [_ key id]]
+   (assoc-in db [:ui (or key :default) :accordion-index] id)))
+
+(reg-sub
+ :accordion-index
+ (fn [db [_ key]]
+   (get-in db [:ui (or key :default) :accordion-index] 0)))
+
+(defn accordion
+  ""
+  [{:key key} & children]
+  (let [cur @(subscribe [:accordion-index key])
+        title-list (map get-title children)
+        key-map (into {} (map #(if-let [key (get-key %1)]
+                                 [key %2])
+                              children
+                              (iterate inc 0)))
+        cur (if (string? cur)
+              (key-map cur)
+              cur)]
+    [:div.ui-accordion.ui-widget
+     (map (fn [child i]
+            [:div {:key i}
+             [:div.ui-title {:on-click #(dispatch [:change-accordion-index key i])} (get-title child)]
+             (if (= i cur) [:div child] nil)])
+          children
+          (iterate inc 0))]))

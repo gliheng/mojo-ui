@@ -14,6 +14,7 @@
 
         li {
             display: inline-block;
+            position: relative;
             height: 100%;
             text-align: center;
             list-style: none;
@@ -46,11 +47,16 @@
 .ui-ripple {
     position: relative;
     overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* pointer-events: none; */
 }
 
 .ui-ripple-fx {
     position: absolute;
-    pointer-events: none;
     background-color: white;
     width: 10px;
     height: 10px;
@@ -59,16 +65,47 @@
     animation: 3s spread $ease;
 }
 
+.ui-bulge {
+    pointer-events: none;
+    position: absolute;
+    background-color: #1050e0;
+    top: -50%;
+    bottom: -50%;
+    right: 5%;
+    left: 5%;
+    opacity: 0;
+    border-radius: 50%;
+    animation: bulge-appear 0.3s, bulge 1s ease-in-out 0.3s infinite alternate;
+}
+
 .ui-button {
-    .ui-ripple {
-        padding: 0.5em;
-    }
+    position: relative;
     cursor: default;
+    overflow: hidden;
     display: inline-block;
+    line-height: 1.5em;
+    padding: 0.5em;
     color: white;
-    background-color: $color1;
-    transition: background-color 1s $ease;
+    box-shadow: 0px 0 4px rgba(0,0,0,0.4);
+    .ui-bulge {
+        z-index: -1;
+    }
+    .ui-bg {
+        z-index: -2;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: $color1;
+        transition: background-color 1s $ease;
+    }
 }
 .ui-button:hover {
-    background-color: $color1-hover;
+    .ui-bg {
+        background-color: $color1-hover;
+    }
+}
+.ui-button:focus {
+    outline: none;
 }

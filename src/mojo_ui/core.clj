@@ -3,7 +3,6 @@
             [clojure.string :refer [join]])
   (:import [java.security MessageDigest]))
 
-
 (defn compile-sass
   "compile sass file and get output as string"
   [url]
@@ -14,6 +13,8 @@
 
 (def config {:style {:root "css/"
                      :exts [".scss" ".sass" ".css"]}})
+
+
 (defn resolve-file
   [fn type]
   (let [conf (config type)
@@ -21,6 +22,7 @@
         root (conf :root)
         file (first (map #(resource (str root fn %)) exts))]
     (if file (.getFile file))))
+
 
 (defn int->hex
   [d]
