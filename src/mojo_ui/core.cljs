@@ -32,7 +32,8 @@
 (def get-title (comp :title second))
 
 (defn tabs
-  "If tab-index is string, convert it to number first using tab keys."
+  "A tab component,
+  If tab-index is string, convert it to number first using tab keys."
   [{:key [key]} & children]
   (let [cur @(subscribe [:tab-index key])
         title-list (map get-title children)
@@ -60,8 +61,8 @@
                          :width (str (get-w cur) "%")}}]
      [:div ^{:key cur} (nth children cur)]]))
 
-(defn item
-  ""
+(defn view
+  "view provide a title attribute on their 1st argument"
   [& rest]
   (into [:div] (drop 1 rest)))
 
@@ -98,7 +99,7 @@
    (get-in db [:ui (or key :default) :accordion-index] 0)))
 
 (defn accordion
-  ""
+  "an accordion component"
   [{:key key} & children]
   (let [cur @(subscribe [:accordion-index key])
         title-list (map get-title children)
@@ -116,3 +117,4 @@
              (if (= i cur) [:div child] nil)])
           children
           (iterate inc 0))]))
+
