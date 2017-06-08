@@ -34,7 +34,7 @@
 (defn tabs
   "A tab component,
   If tab-index is string, convert it to number first using tab keys."
-  [{:key [key]} & children]
+  [{:keys [key]} & children]
   (let [cur @(subscribe [:tab-index key])
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
