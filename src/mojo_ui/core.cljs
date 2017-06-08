@@ -72,8 +72,9 @@
   (let [focus (atom false)
         on-focus (fn [] (reset! focus true))
         on-blur (fn [] (reset! focus false))]
-    (fn [{take-focus :take-focus} & rest]
+    (fn [{:keys [take-focus on-click]} & rest]
       [:div.ui-button.ui-widget {:tab-index 0
+                                 :on-click on-click
                                  :on-focus on-focus
                                  :on-blur on-blur}
        [:div.ui-bg]
@@ -117,4 +118,3 @@
              (if (= i cur) [:div child] nil)])
           children
           (iterate inc 0))]))
-

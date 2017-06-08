@@ -22,7 +22,6 @@
         file (first (map #(resource (str root fn %)) exts))]
     (if file (.getFile file))))
 
-
 (defn int->hex
   [d]
   (subs (Integer/toString (+ d 0x100), 16) 1))

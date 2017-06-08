@@ -1,6 +1,7 @@
 (ns mojo-ui.demo
   (:require [mojo-ui.core :refer [button tabs accordion view]]
-            [reagent.core :refer [render]])
+            [mojo-ui.dialog :refer [dialog]]
+            [reagent.core :refer [render atom]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
 (require-css "demo")
@@ -22,10 +23,32 @@
    [view {:title "Tab 3"}
     [:div.tab-content "tab3 content"]]])
 
+(defonce dialog-open (atom false))
+
+(defn dialog-content
+  ""
+  []
+  [:div "A dialog"])
+
 (defn dialog-demo
-   ""
-   []
-   )
+  ""
+  []
+  (let [open dialog-open
+        close-dialog (fn [] (reset! open false))
+        open-dialog (fn [] (reset! open true))]
+    (fn []
+      [:div
+       [button {:take-focus true
+                :on-click open-dialog}
+        "Open dialog"]
+       [dialog {:title "Dialog"
+                :open @open
+                :on-close close-dialog
+                :content [dialog-content]
+                :actions [[button {:take-focus true
+                                   :on-click close-dialog} "OK"]
+                          [button {:take-focus true
+                                   :on-click close-dialog} "Cancel"]]}]])))
 
 (defn accordion-demo
   ""
