@@ -37,18 +37,20 @@
         close-dialog (fn [] (reset! open false))
         open-dialog (fn [] (reset! open true))]
     (fn []
-      [:div
-       [button {:take-focus true
-                :on-click open-dialog}
-        "Open dialog"]
-       [dialog {:title "Dialog"
-                :open @open
-                :on-close close-dialog
-                :content [dialog-content]
-                :actions [[button {:take-focus true
-                                   :on-click close-dialog} "OK"]
-                          [button {:take-focus true
-                                   :on-click close-dialog} "Cancel"]]}]])))
+      (let [d (if @open
+                [dialog {:title "Dialog"
+                                 :open @open
+                         :on-close close-dialog
+                         :content [dialog-content]
+                         :actions [[button {:take-focus true
+                                            :on-click close-dialog} "OK"]
+                                   [button {:take-focus true
+                                            :auto-focus true
+                                            :on-click close-dialog} "Cancel"]]}])]
+        [:div
+         [button {:take-focus true
+                  :on-click open-dialog} "Open dialog"]
+         d]))))
 
 (defn accordion-demo
   ""
@@ -68,14 +70,14 @@
     [:h1 "Tab Demo"]
     [tab-demo {:key "tab-demo"}]]
    [:div
-    [:h1 "Button Demo"]
-    [button-demo]]
-   [:div
     [:h1 "Accordion Demo"]
     [accordion-demo]]
    [:div
     [:h1 "Dialog Demo"]
-    [dialog-demo]]])
+    [dialog-demo]]
+   [:div
+    [:h1 "Button Demo"]
+    [button-demo]]])
 
 (defn ^:export run-demo
   []

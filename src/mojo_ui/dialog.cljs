@@ -5,11 +5,11 @@
 
 (defn dialog
   ""
-  [{:keys [open title content actions on-close]
+  [{:keys [title content actions on-close]
     :or {on-close (fn [] (unmount-component-at-node @root))}}]
   (let [footer (if (seq actions)
                  (into [:div.ui-footer] actions))]
-    [:div.ui-dialog-wrap {:style {:display (if open "" "none")}}
+    [:div.ui-dialog-wrap
      [:div.ui-dialog-outer
       [:div.ui-dialog
        [:div.ui-title

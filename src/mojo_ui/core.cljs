@@ -72,11 +72,12 @@
   (let [focus (atom false)
         on-focus (fn [] (reset! focus true))
         on-blur (fn [] (reset! focus false))]
-    (fn [{:keys [take-focus on-click]} & rest]
-      [:div.ui-button.ui-widget {:tab-index 0
-                                 :on-click on-click
-                                 :on-focus on-focus
-                                 :on-blur on-blur}
+    (fn [{:keys [take-focus on-click auto-focus]} & rest]
+      [:button.ui-button.ui-widget {:tab-index 0
+                                    :ref (fn [btn] (if (and btn auto-focus) (.focus btn)))
+                                    :on-click on-click
+                                    :on-focus on-focus
+                                    :on-blur on-blur}
        [:div.ui-bg]
        [ripple]
        (if (and take-focus @focus) [bulge] nil)
@@ -84,7 +85,7 @@
 
 (defmethod button false
   [& rest]
-  [:div.ui-button.ui-widget
+  [:button.ui-button.ui-widget
    [:div.ui-bg]
    [ripple]
    rest])
