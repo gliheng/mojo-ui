@@ -33,7 +33,7 @@
                            ;; Comment this out once it no longer serves you.
                            :open-urls ["http://localhost:3449/index.html"]}
 
-                :compiler {:main mojo-ui.core
+                :compiler {:main mojo-ui.demo
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/mojo_ui.js"
                            :output-dir "resources/public/js/compiled/out"
@@ -47,7 +47,7 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/mojo_ui.js"
-                           :main mojo-ui.core
+                           :main mojo-ui.demo
                            :optimizations :advanced
                            :pretty-print false}}]}
 
