@@ -2,6 +2,10 @@
 
 A ui library written for clojurescript.
 
+## Demo
+
+[Demo Link](https://gliheng.github.com/mojo-ui)
+
 ## Overview
 
 This ui library uses reagent and re-frame. So it's tied to a react binding and a MV* library.
