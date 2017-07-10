@@ -3,7 +3,7 @@
                                    subscribe
                                    reg-event-db
                                    reg-sub]]
-            [reagent.core :refer [atom]]
+            [reagent.core :refer [atom create-class props]]
             [mojo-ui.fx :refer [ripple bulge]]
             [devtools.core :as devtools])
   (:require-macros [mojo-ui.core :refer [require-css]]))
@@ -69,19 +69,22 @@
 (defmulti button map?)
 
 (defmethod button true []
-  (let [focus (atom false)
+  (let [btn (atom nil)
+        focus (atom false)
         on-focus (fn [] (reset! focus true))
         on-blur (fn [] (reset! focus false))]
-    (fn [{:keys [take-focus on-click auto-focus]} & rest]
-      [:button.ui-button.ui-widget {:tab-index 0
-                                    :ref (fn [btn] (if (and btn auto-focus) (.focus btn)))
-                                    :on-click on-click
-                                    :on-focus on-focus
-                                    :on-blur on-blur}
-       [:div.ui-bg]
-       [ripple]
-       (if (and take-focus @focus) [bulge] nil)
-       rest])))
+    (create-class {:component-did-mount (fn [this] (if (:auto-focus (props this))
+                                                     (.focus @btn)))
+                   :reagent-render (fn [{:keys [take-focus on-click auto-focus]} & rest]
+                                     [:button.ui-button.ui-widget {:tab-index 0
+                                                                   :ref (fn [_btn] (reset! btn _btn))
+                                                                   :on-click on-click
+                                                                   :on-focus on-focus
+                                                                   :on-blur on-blur}
+                                      [:div.ui-bg]
+                                      [ripple]
+                                      (if (and take-focus @focus) [bulge] nil)
+                                      rest])})))
 
 (defmethod button false
   [& rest]
