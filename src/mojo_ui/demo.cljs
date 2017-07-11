@@ -10,8 +10,8 @@
   ""
   []
   [:div#button-demo
-   [button {:take-focus true} "Button with ripple and bulge effects."]
-   [button "Button with only ripple."]])
+   [button {:take-focus true} ":take-focus button"]
+   [button "simple button"]])
 
 (defn tab-demo
   [{:keys [key]}]

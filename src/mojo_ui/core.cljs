@@ -3,9 +3,10 @@
                                    subscribe
                                    reg-event-db
                                    reg-sub]]
-            [reagent.core :refer [atom create-class props]]
+            [reagent.core :refer [atom create-class props dom-node]]
             [mojo-ui.fx :refer [ripple bulge]]
-            [devtools.core :as devtools])
+            [devtools.core :as devtools]
+            [mojo-ui.addons :refer [css-transition-group]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
 (devtools/install!)
@@ -64,7 +65,7 @@
 (defn view
   "view provide a title attribute on their 1st argument"
   [& rest]
-  (into [:div] (drop 1 rest)))
+  (into [:div.ui-view] (drop 1 rest)))
 
 (defmulti button map?)
 
@@ -115,10 +116,19 @@
         cur (if (string? cur)
               (key-map cur)
               cur)]
+
     [:div.ui-accordion.ui-widget
      (map (fn [child i]
             [:div {:key i}
-             [:div.ui-title {:on-click #(dispatch [:change-accordion-index key i])} (get-title child)]
-             (if (= i cur) [:div child] nil)])
+             [:div.ui-title
+              {:on-click #(dispatch [:change-accordion-index key (if (= cur i) -1 i)])}
+              (get-title child)]
+             [css-transition-group {:transition-name "ui-accordion"
+                                    :component "div"
+                                    :className "ui-transition-group"
+                                    :transition-enter-timeout 1000
+                                    :transition-leave-timeout 1000}
+              (if (= i cur)
+                child nil)]])
           children
           (iterate inc 0))]))

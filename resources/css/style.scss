@@ -119,6 +119,27 @@
         padding-left: 10px;
         border-left: 10px solid $color1;
     }
+    .ui-transition-group {
+        overflow: hidden;
+    }
+    .ui-accordion-enter {
+        transition: opacity 1s $ease, max-height 1s $ease;
+        opacity: 0;
+        max-height: 0;
+    }
+    .ui-accordion-enter.ui-accordion-enter-active {
+        opacity: 1;
+        max-height: 200px;
+    }
+    .ui-accordion-leave {
+        transition: opacity 1s $ease, max-height 1s $ease;
+        opacity: 1;
+        max-height: 200px;
+    }
+    .ui-accordion-leave.ui-accordion-leave-active {
+        opacity: 0;
+        max-height: 0;
+    }
 }
 
 .ui-dialog-wrap {

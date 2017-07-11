@@ -10,7 +10,9 @@
                  [org.clojure/clojurescript "1.9.229"]
                  [org.clojure/core.async  "0.3.442"
                   :exclusions [org.clojure/tools.reader]]
-                 [reagent "0.6.0-rc"]
+                 [reagent "0.7.0"
+                  :exclusions [cljsjs/react]]
+                 [cljsjs/react-with-addons "15.6.1-0"]
                  [re-frame "0.9.0"]
                  [binaryage/devtools "0.8.1"]]
 
