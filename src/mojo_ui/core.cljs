@@ -97,12 +97,17 @@
 (reg-event-db
  :change-accordion-index
  (fn [db [_ key id]]
-   (assoc-in db [:ui (or key :default) :accordion-index] id)))
+   (update-in db [:ui (or key :default) :accordion-index]
+              (fn [item]
+                (let [item (or item #{0})]
+                  ((if (contains? item id)
+                     disj
+                     conj) item id))))))
 
 (reg-sub
  :accordion-index
  (fn [db [_ key]]
-   (get-in db [:ui (or key :default) :accordion-index] 0)))
+   (get-in db [:ui (or key :default) :accordion-index] #{0})))
 
 (defn accordion
   "an accordion component"
@@ -113,22 +118,23 @@
                                  [key %2])
                               children
                               (iterate inc 0)))
-        cur (if (string? cur)
-              (key-map cur)
-              cur)]
-
+        cur (into #{}
+                  (map (fn [item]
+                         (if (string? item)
+                           (key-map item)
+                           item)) cur))]
     [:div.ui-accordion.ui-widget
      (map (fn [child i]
             [:div {:key i}
-             [:div.ui-title
-              {:on-click #(dispatch [:change-accordion-index key (if (= cur i) -1 i)])}
+             [:div.ui-title {:on-click
+                             #(dispatch [:change-accordion-index key i])}
               (get-title child)]
              [css-transition-group {:transition-name "ui-accordion"
                                     :component "div"
                                     :className "ui-transition-group"
                                     :transition-enter-timeout 1000
                                     :transition-leave-timeout 1000}
-              (if (= i cur)
+              (if (cur i)
                 child nil)]])
           children
           (iterate inc 0))]))
