@@ -219,3 +219,13 @@
     transform: rotateZ(-45deg);
 }
 
+.ui-state-hidden {
+    position: relative;
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transition: height 1s, opacity 1s;
+    > div {
+        position: absolute;
+    }
+}

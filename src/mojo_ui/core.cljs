@@ -3,10 +3,12 @@
                                    subscribe
                                    reg-event-db
                                    reg-sub]]
-            [reagent.core :refer [atom create-class props dom-node]]
+            [reagent.core :refer [atom create-class props] :as reagent]
             [mojo-ui.fx :refer [ripple bulge]]
+            [mojo-ui.fadein-view :refer [fadein-view]]
             [devtools.core :as devtools]
-            [mojo-ui.addons :refer [css-transition-group]])
+            [goog.events :as events]
+            [mojo-ui.addons :refer [transition-group]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
 (devtools/install!)
@@ -129,12 +131,8 @@
              [:div.ui-title {:on-click
                              #(dispatch [:change-accordion-index key i])}
               (get-title child)]
-             [css-transition-group {:transition-name "ui-accordion"
-                                    :component "div"
-                                    :className "ui-transition-group"
-                                    :transition-enter-timeout 1000
-                                    :transition-leave-timeout 1000}
+             [transition-group {:component "div"}
               (if (cur i)
-                child nil)]])
+                [fadein-view child] nil)]])
           children
           (iterate inc 0))]))

@@ -86,3 +86,7 @@
 
 (defn on-js-reload []
   (run-demo))
+
+(deftype User [name sex]
+  Object
+  (eat [this] (println "eat me!")))
