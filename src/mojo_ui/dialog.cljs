@@ -5,20 +5,22 @@
 
 (defn dialog
   ""
-  [{:keys [title content actions on-close]
-    :or {on-close (fn [] (unmount-component-at-node @root))}}]
+  [{:keys [title content actions on-close]}]
   (let [footer (if (seq actions)
-                 (into [:div.ui-footer] actions))]
+                 (into [:div.ui-footer] actions))
+        close-dialog (fn []
+                       (unmount-component-at-node @root)
+                       (on-close))]
     [:div.ui-dialog-wrap
      [:div.ui-dialog-outer
       [:div.ui-dialog
        [:div.ui-title
         [:h3 title]
         [:a.ui-close {:href "javascript:void(0)"
-                      :on-click on-close}]]
+                      :on-click close-dialog}]]
        [:div.ui-content content]
        footer]]
-     [:div.ui-bg {:on-click on-close}]]))
+     [:div.ui-bg {:on-click close-dialog}]]))
 
 (defn open-dialog!
   "Append the dialog to the document."

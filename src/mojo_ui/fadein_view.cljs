@@ -25,7 +25,6 @@
     :component-will-enter
     (fn [cbk]
       (this-as this
-        (declare listener)
         (let [node (reagent/dom-node this)
               height (get-height this)]
           (reagent/set-state this {:height height})
@@ -38,7 +37,6 @@
     :component-will-leave
     (fn [cbk]
       (this-as this
-        (declare listener)
         (let [node (reagent/dom-node this)
               height (get-height this)]
           (reagent/set-state this {:hidden :true :height height})

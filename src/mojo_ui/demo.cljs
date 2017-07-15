@@ -39,7 +39,6 @@
     (fn []
       (let [d (if @open
                 [dialog {:title "Dialog"
-                                 :open @open
                          :on-close close-dialog
                          :content [dialog-content]
                          :actions [[button {:take-focus true
