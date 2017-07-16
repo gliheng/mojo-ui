@@ -5,6 +5,7 @@
                                    reg-sub]]
             [reagent.core :refer [atom create-class props] :as reagent]
             [mojo-ui.fx :refer [ripple bulge]]
+            [mojo-ui.list :refer [list list-item]]
             [mojo-ui.fadein-view :refer [fadein-view]]
             [devtools.core :as devtools]
             [goog.events :as events]

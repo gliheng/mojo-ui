@@ -1,6 +1,7 @@
 (ns mojo-ui.demo
   (:require [mojo-ui.core :refer [button tabs accordion view]]
             [mojo-ui.dialog :refer [dialog]]
+            [mojo-ui.list :refer [list list-item]]
             [reagent.core :refer [render atom]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
@@ -14,14 +15,15 @@
    [button "simple button"]])
 
 (defn tab-demo
+  "key is for identifing tab instances"
   [{:keys [key]}]
   [tabs {:key key}
    [view {:title "Tab 1"}
-    [:div.tab-content "tab1 content"]]
+    [:div.content "tab1 content"]]
    [view {:title "Tab 2"}
-    [:div.tab-content "tab2 content"]]
+    [:div.content "tab2 content"]]
    [view {:title "Tab 3"}
-    [:div.tab-content "tab3 content"]]])
+    [:div.content "tab3 content"]]])
 
 (defonce dialog-open (atom false))
 
@@ -53,14 +55,25 @@
 
 (defn accordion-demo
   ""
-  [{:key [key]}]
-  [accordion {:key key}
+  []
+  [accordion {:key "accordion-demo"}
    [view {:title "Section 1"}
-    [:div.tab-content "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dolor odio, tristique non dui eu, tempus fringilla libero. Sed pretium ex odio, lobortis pharetra dolor eleifend nec. Nullam pellentesque semper."]]
+    [:div.content "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dolor odio, tristique non dui eu, tempus fringilla libero. Sed pretium ex odio, lobortis pharetra dolor eleifend nec. Nullam pellentesque semper."]]
    [view {:title "Section 2"}
-    [:div.tab-content "Aenean quis mi est. Nullam blandit aliquet mi nec venenatis. Mauris ante tellus, semper at vehicula sed, ultrices sit amet urna. Suspendisse neque ligula, vulputate quis accumsan in, pellentesque ac."]]
+    [:div.content "Aenean quis mi est. Nullam blandit aliquet mi nec venenatis. Mauris ante tellus, semper at vehicula sed, ultrices sit amet urna. Suspendisse neque ligula, vulputate quis accumsan in, pellentesque ac."]]
    [view {:title "Section 3"}
-    [:div.tab-content "Fusce feugiat erat ac gravida mattis. Phasellus laoreet urna eget metus tempus, nec venenatis metus lacinia. Curabitur eu accumsan risus, vitae vestibulum odio. Curabitur tincidunt velit id ex pulvinar convallis."]]])
+    [:div.content "Fusce feugiat erat ac gravida mattis. Phasellus laoreet urna eget metus tempus, nec venenatis metus lacinia. Curabitur eu accumsan risus, vitae vestibulum odio. Curabitur tincidunt velit id ex pulvinar convallis."]]])
+
+(defn list-demo
+  ""
+  []
+  [list
+   [list-item "Java"]
+   [list-item "Javascript"]
+   [list-item "Python"]
+   [list-item "Go"]
+   [list-item "Clojure"]])
+
 
 (defn demo
   []
@@ -76,7 +89,10 @@
     [dialog-demo]]
    [:div
     [:h1 "Button Demo"]
-    [button-demo]]])
+    [button-demo]]
+   [:div
+    [:h1 "List Demo"]
+    [list-demo]]])
 
 (defn ^:export run-demo
   []
