@@ -56,7 +56,7 @@
 (defn accordion-demo
   ""
   []
-  [accordion {:key "accordion-demo"}
+  [accordion {:key "accordion-demo" :id "accordion-demo"}
    [view {:title "Section 1"}
     [:div.content "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dolor odio, tristique non dui eu, tempus fringilla libero. Sed pretium ex odio, lobortis pharetra dolor eleifend nec. Nullam pellentesque semper."]]
    [view {:title "Section 2"}
@@ -67,12 +67,19 @@
 (defn list-demo
   ""
   []
-  [list
-   [list-item "Java"]
-   [list-item "Javascript"]
-   [list-item "Python"]
-   [list-item "Go"]
-   [list-item "Clojure"]])
+  [:div#list-demo
+   [list
+    [list-item "Java"]
+    [list-item "Javascript"]
+    [list-item "Python"]
+    [list-item "Go"]
+    [list-item "Clojure"]]
+   [list
+    [list-item {:icon "user-circle"} "User"]
+    [list-item {:icon "car"} "Car"]
+    [list-item {:icon "cloud"} "Cloud"]
+    [list-item {:icon "home"} "Home"]
+    [list-item {:icon "telegram"} "Telegram"]]])
 
 
 (defn demo

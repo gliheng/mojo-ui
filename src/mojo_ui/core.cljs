@@ -12,6 +12,7 @@
             [mojo-ui.addons :refer [transition-group]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
+
 (devtools/install!)
 (enable-console-print!)
 
@@ -38,7 +39,7 @@
 (defn tabs
   "A tab component,
   If tab-index is string, convert it to number first using tab keys."
-  [{:keys [key]} & children]
+  [{:keys [key id class]} & children]
   (let [cur @(subscribe [:tab-index key])
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
@@ -54,6 +55,7 @@
                  (- 100 (* w (dec c)))
                  w)]
     [:div.ui-tabs.ui-widget
+     {:id id :class class}
      [:ul
       (for [i (range c)]
         [:li {:key i
@@ -114,7 +116,7 @@
 
 (defn accordion
   "an accordion component"
-  [{:key key} & children]
+  [{:keys [key id class]} & children]
   (let [cur @(subscribe [:accordion-index key])
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
@@ -127,6 +129,7 @@
                            (key-map item)
                            item)) cur))]
     [:div.ui-accordion.ui-widget
+     {:id id :class class}
      (map (fn [child i]
             [:div {:key i}
              [:div.ui-title {:on-click
