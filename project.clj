@@ -1,6 +1,6 @@
 (defproject mojo-ui "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+  :description "clojurescript UI library"
+  :url "https://github.com/gliheng/mojo-ui"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -16,7 +16,7 @@
                  [re-frame "0.9.0"]
                  [binaryage/devtools "0.8.1"]]
 
-  :plugins [[lein-figwheel "0.5.10"]
+  :plugins [[lein-figwheel "0.5.11"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
             [lein-resource "16.9.1"]]
 
@@ -107,4 +107,6 @@
                    ;; need to add the compliled assets to the :clean-targets
                    :clean-targets ^{:protect false} ["resources/public/js/compiled"
                                                      :target-path]}}
-  :hooks [leiningen.cljsbuild])
+  :hooks [leiningen.cljsbuild]
+  :deploy-repositories [["releases" :clojars]
+                        ["snapshots" :clojars]])

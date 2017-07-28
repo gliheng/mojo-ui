@@ -3,6 +3,14 @@
             [clojure.string :refer [join]])
   (:import [java.security MessageDigest]))
 
+(def config (atom {:style-root "styles/"
+                   :style-exts [".scss" ".sass" ".css"]}))
+
+(defn set-config!
+  [conf]
+  (swap! config
+         (fn [old] (merge old conf))))
+
 (defn compile-sass
   "compile sass file and get output as string"
   [url]
@@ -11,14 +19,12 @@
     (with-open [rdr (reader stream)]
       (join "\n" (line-seq rdr)))))
 
-(def config {:style {:root "css/"
-                     :exts [".scss" ".sass" ".css"]}})
-
 (defn resolve-file
   [fn type]
-  (let [conf (config type)
-        exts (conf :exts)
-        root (conf :root)
+  (let [t (name type)
+        conf @config
+        exts (conf (keyword (str t "-exts")))
+        root (conf (keyword (str t "-root")))
         file (first (map #(resource (str root fn %)) exts))]
     (if file (.getFile file))))
 
