@@ -5,7 +5,7 @@
             [reagent.core :refer [render atom]])
   (:require-macros [mojo-ui.core :refer [require-css]]))
 
-(require-css "demo" "mojo-ui")
+(require-css "demo" mojo-ui)
 
 (defn button-demo
   ""

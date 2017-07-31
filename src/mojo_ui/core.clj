@@ -47,8 +47,8 @@
     (bytes->string (.digest d (.getBytes s)))))
 
 (defmacro require-css
-  ;; ([css-file]
-  ;;  (require-css $form $env css-file ""))
+  ([css-file]
+   `(require-css ~css-file ""))
   ([css-file pkg]
    (if-let [url (resolve-file
                  css-file
