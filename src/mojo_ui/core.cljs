@@ -16,7 +16,7 @@
 (devtools/install!)
 (enable-console-print!)
 
-(require-css "mojo_ui/styles/style")
+(require-css "style" "mojo-ui")
 
 (reg-event-db
  :change-tab-index

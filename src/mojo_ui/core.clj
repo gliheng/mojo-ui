@@ -3,7 +3,7 @@
             [clojure.string :refer [join]])
   (:import [java.security MessageDigest]))
 
-(def config (atom {:style-root "styles/"
+(def config (atom {:style-root "styles"
                    :style-exts [".scss" ".sass" ".css"]}))
 
 (defn set-config!
@@ -20,12 +20,15 @@
       (join "\n" (line-seq rdr)))))
 
 (defn resolve-file
-  [fn type]
+  [fn type pkg]
   (let [t (name type)
         conf @config
         exts (conf (keyword (str t "-exts")))
         root (conf (keyword (str t "-root")))
-        file (first (map #(resource (str root fn %)) exts))]
+        file (->> exts
+                  (map #(resource (clojure.string/join "/" [pkg root (str fn %)])))
+                  (filter some?)
+                  first)]
     (if file (.getFile file))))
 
 (defn int->hex
@@ -43,14 +46,21 @@
   (let [d (MessageDigest/getInstance "md5")]
     (bytes->string (.digest d (.getBytes s)))))
 
-(defmacro require-css [css-file]
-  (let [url (resolve-file css-file :style)
-        id (md5 url)
-        text (compile-sass url)]
-    `(do
-       (if-let [elem# (js/document.getElementById ~id)]
-         (.remove elem#))
-       (let [elem# (js/document.createElement "style")]
-         (set! (.-id elem#) ~id)
-         (set! (.-innerHTML elem#) ~text)
-         (js/document.head.appendChild elem#)))))
+(defmacro require-css
+  ;; ([css-file]
+  ;;  (require-css $form $env css-file ""))
+  ([css-file pkg]
+   (if-let [url (resolve-file
+                 css-file
+                 :style
+                 (clojure.string/replace pkg "-" "_"))]
+     (let [id (md5 url)
+           text (compile-sass url)]
+       `(do
+          (if-let [elem# (js/document.getElementById ~id)]
+            (.remove elem#))
+          (let [elem# (js/document.createElement "style")]
+            (set! (.-id elem#) ~id)
+            (set! (.-innerHTML elem#) ~text)
+            (js/document.head.appendChild elem#))))
+     `(js/console.warn "Cannot find style:" ~css-file))))
