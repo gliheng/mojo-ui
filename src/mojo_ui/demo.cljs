@@ -3,9 +3,9 @@
             [mojo-ui.dialog :refer [dialog]]
             [mojo-ui.list :refer [list list-item]]
             [reagent.core :refer [render atom]])
-  (:require-macros [mojo-ui.core :refer [require-css]]))
+  (:require-macros [mojo-ui.core :refer [require-css-pkg]]))
 
-(require-css "demo" mojo-ui)
+(require-css-pkg "demo" mojo-ui)
 
 (defn button-demo
   ""

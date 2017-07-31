@@ -10,13 +10,13 @@
             [devtools.core :as devtools]
             [goog.events :as events]
             [mojo-ui.addons :refer [transition-group]])
-  (:require-macros [mojo-ui.core :refer [require-css]]))
+  (:require-macros [mojo-ui.core :refer [require-css-pkg]]))
 
 
 (devtools/install!)
 (enable-console-print!)
 
-(require-css "style" mojo-ui)
+(require-css-pkg "style" mojo-ui)
 
 (reg-event-db
  :change-tab-index
