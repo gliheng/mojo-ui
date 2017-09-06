@@ -17,8 +17,9 @@
 
 (defn list-item
   "a single list view item"
-  ([{:keys [icon right-icon on-click]} text]
-   [:div.ui-list-item {:on-click on-click}
+  ([{:keys [icon right-icon on-click class]} text]
+   [:div.ui-list-item {:class class
+                       :on-click on-click}
     (if icon [font-icon icon] nil)
     text
     [ripple]])
