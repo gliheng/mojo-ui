@@ -68,13 +68,13 @@
   ""
   []
   [:div#list-demo
-   [list
+   [list {:class "list1"}
     [list-item "Java"]
     [list-item "Javascript"]
     [list-item "Python"]
     [list-item "Go"]
     [list-item "Clojure"]]
-   [list
+   [list {:id "list2"}
     [list-item {:icon "user-circle"} "User"]
     [list-item {:icon "car"} "Car"]
     [list-item {:icon "cloud"} "Cloud"]

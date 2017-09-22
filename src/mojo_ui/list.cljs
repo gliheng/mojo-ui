@@ -3,17 +3,20 @@
             [mojo-ui.icon :refer [font-icon]])
   (:refer-clojure :exclude [list]))
 
-
-(defn list
-  "a generic list view"
-  [& children]
-  [:div.ui-list.ui-widget
+(defmulti list map?)
+(defmethod list true
+  [{:keys [class id]} & children]
+  [:div.ui-list.ui-widget {:id id :class class}
    (map-indexed (fn
                   [idx item]
                   ;; find a key for each item
                   (let [key (or (:key (second item)) (str idx))]
                     (with-meta item {:key key})))
                 children)])
+
+(defmethod list false
+  [& children]
+  (apply list {} children))
 
 (defn list-item
   "a single list view item"
