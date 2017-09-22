@@ -1,11 +1,11 @@
 (ns mojo-ui.core
   (:require [re-frame.core :refer [dispatch
-                                   subscribe
-                                   reg-event-db
-                                   reg-sub]]
+                                   subscribe]]
             [reagent.core :refer [atom create-class props] :as reagent]
             [mojo-ui.fx :refer [ripple bulge]]
             [mojo-ui.list :refer [list list-item]]
+            [mojo-ui.events]
+            [mojo-ui.subs]
             [mojo-ui.fadein-view :refer [fadein-view]]
             [devtools.core :as devtools]
             [goog.events :as events]
@@ -18,15 +18,6 @@
 
 (require-css "style" mojo-ui)
 
-(reg-event-db
- :change-tab-index
- (fn [db [_ key id]]
-   (assoc-in db [:ui (or key :default) :tab-index] id)))
-
-(reg-sub
- :tab-index
- (fn [db [_ key]]
-   (get-in db [:ui (or key :default) :tab-index] 0)))
 
 (defn get-key
   ""
@@ -40,7 +31,7 @@
   "A tab component,
   If tab-index is string, convert it to number first using tab keys."
   [{:keys [key id class]} & children]
-  (let [cur @(subscribe [:tab-index key])
+  (let [cur @(subscribe [:mojo-ui.subs/tab-index key])
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
                                  [key %2])
@@ -61,7 +52,7 @@
         [:li {:key i
               :class (if (= cur i) "ui-active" "")
               :style {:width (str (get-w i) "%")}
-              :on-click #(dispatch [:change-tab-index key i])}
+              :on-click #(dispatch [:mojo-ui.events/change-tab-index key i])}
          (nth title-list i) [ripple]])]
      [:div.ui-line {:style {:left (str (* cur w) "%")
                          :width (str (get-w cur) "%")}}]
@@ -99,25 +90,11 @@
    [ripple]
    rest])
 
-(reg-event-db
- :change-accordion-index
- (fn [db [_ key id]]
-   (update-in db [:ui (or key :default) :accordion-index]
-              (fn [item]
-                (let [item (or item #{0})]
-                  ((if (contains? item id)
-                     disj
-                     conj) item id))))))
-
-(reg-sub
- :accordion-index
- (fn [db [_ key]]
-   (get-in db [:ui (or key :default) :accordion-index] #{0})))
 
 (defn accordion
   "an accordion component"
   [{:keys [key id class]} & children]
-  (let [cur @(subscribe [:accordion-index key])
+  (let [cur @(subscribe [:mojo-ui.subs/accordion-index key])
         title-list (map get-title children)
         key-map (into {} (map #(if-let [key (get-key %1)]
                                  [key %2])
@@ -133,7 +110,7 @@
      (map (fn [child i]
             [:div {:key i}
              [:div.ui-title {:on-click
-                             #(dispatch [:change-accordion-index key i])}
+                             #(dispatch [:mojo-ui.events/change-accordion-index key i])}
               (get-title child)]
              [transition-group {:component "div"}
               (if (cur i)
