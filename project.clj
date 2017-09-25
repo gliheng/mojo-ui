@@ -1,4 +1,4 @@
-(defproject mojo-ui "0.1.0"
+(defproject mojo-ui "0.1.1"
   :description "clojurescript UI library"
   :url "https://github.com/gliheng/mojo-ui"
   :license {:name "Eclipse Public License"
